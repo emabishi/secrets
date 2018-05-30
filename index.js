@@ -2,37 +2,24 @@
 
 const express = require('express');
 const mongoose = require('mongoose');
-// const bodyParser = require('body-parser');
 const logger = require('morgan');
 
 const app = express();
 const router = express.Router();
 
 const config = require('./config');
-// const userRoutes = require('./routes/users');
-// const noteRoutes = require('./routes/notes');
+const routes = require('./routes');
 
 // https://expressjs.com/en/4x/api.html#app.settings.table
 app.set('env', config.development.env);
 app.set('port', config.development.port);
 
-// Use bodyParser as express middlware to inject all incoming request payload
-// parameters as the req.body property of the request
-// https://www.npmjs.com/package/body-parser#bodyparserurlencodedoptions
-// app.use(bodyParser.urlencoded({ extended: true }));
-// OR
-
+// Inject all incoming request payload parameters as the req.body property of the request
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(logger('dev'));
 
-router.get('/', (req, res) => {
-  res.send('Hello');
-});
-
-app.use('/', router);
-// app.use('/', userRoutes(router));
-
+app.use('/', routes(router));
 
 app.listen(app.get('port'), (err) => {
   if (err) {

@@ -18,24 +18,21 @@ module.exports = {
 
     user.save(err => {
       if (err) {
-        if (err) {
-          res.json({
-            status: 409,
-            message: err.code,
-          });
-        } else {
-          generateToken(req);
-          res.json({
-            status: 201,
-            message: 'User created',
-          });
-        }
+        res.json({
+          status: 409,
+          message: `Error ${err.code} ${err} Please enter unique email and password`,
+        });
+      } else {
+        generateToken(req);
+        res.json({
+          status: 201,
+          message: 'User created',
+        });
       }
     });
   },
 
   login: (req, res, next) => {
-    // Assume they have a valid token because if they're here, the validate token middleware passed
     const { username, password } = req.body;
     User.findOne({ username }, (err, user) => {
       if (err) {
@@ -46,19 +43,13 @@ module.exports = {
         });
       } else {
         const hashedPassword = user.password;
-        if (validatePassword(password, hashedPassword)) {
+        if (validatePassword(password, hashedPassword).then(res => res)) {
           // Give them a token
-          if (generateToken(req)) {
-            res.json({
-              status: 202,
-              message: 'Login successful',
-            });
-          } else {
-            res.json({
-              status: 401,
-              message: 'Unauthorized'
-            });
-          }
+          generateToken(req);
+          res.json({
+            status: 202,
+            message: 'Login successful',
+          });
         } else {
           res.json({
             status: 401,
@@ -70,8 +61,8 @@ module.exports = {
   },
 
   delete: (req, res, next) => {
-    // Decode the token to retrieve the username
-    const token = req.headers.authorization;
+    const token = req.headers.authorization.split(' ')[1];
+    // Will verify the token and return its payload
     const payload = verifyToken(token);
 
     User.remove({ username: payload.username }, (err, user) => {

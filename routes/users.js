@@ -4,12 +4,12 @@ const validateToken = require('../utils/validateToken');
 
 module.exports = (router) => {
   router.route('/users/:user_id')
-    .get([validateToken(), controller.getUserById])
-    .put([validateToken(), controller.updateUserById])
-    .delete([validateToken(), controller.deleteUserById]);
+  //   .get([validateToken, controller.getUserById])
+  //   .put([validateToken, controller.updateUserById])
+    .delete([validateToken, controller.delete]);
 
   router.route('/login')
-    .post([validateToken(), controller.create]);
+    .post(controller.login, validateToken);
 
   router.route('/register')
     .post(controller.register);

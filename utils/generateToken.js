@@ -14,6 +14,7 @@ function generateToken(req) {
       return false;
     } else {
       req.headers.authorization = token;
+      console.log('token', token);
       return true;
     }
   });
