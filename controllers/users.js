@@ -6,6 +6,12 @@ const verifyToken = require('../utils/verifyToken');
 const User = require('../models/users');
 const notesController = require('./notes');
 
+function getPayloadFromToken(req) {
+  const token = req.headers.authorization.split(' ')[1];
+  // Will verify the token and return its payload
+  return verifyToken(token);
+}
+
 module.exports = {
   register: (req, res, next) => {
     const { name, username, email, password } = req.body;
@@ -18,14 +24,12 @@ module.exports = {
 
     user.save(err => {
       if (err) {
-        res.json({
-          status: 409,
+        res.status(409).send({
           message: `Error ${err.code} ${err} Please enter unique email and password`,
         });
       } else {
         generateToken(req);
-        res.json({
-          status: 201,
+        res.status(201).send({
           message: 'User created',
         });
       }
@@ -36,8 +40,7 @@ module.exports = {
     const { username, password } = req.body;
     User.findOne({ username }, (err, user) => {
       if (err) {
-        res.json({
-          status: 404,
+        res.status(404).send({
           message: 'User not found',
           err,
         });
@@ -46,13 +49,11 @@ module.exports = {
         if (validatePassword(password, hashedPassword).then(res => res)) {
           // Give them a token
           generateToken(req);
-          res.json({
-            status: 202,
+          res.status(202).send({
             message: 'Login successful',
           });
         } else {
-          res.json({
-            status: 401,
+          res.status(401).send({
             message: 'Unauthorized'
           });
         }
@@ -61,25 +62,84 @@ module.exports = {
   },
 
   delete: (req, res, next) => {
-    const token = req.headers.authorization.split(' ')[1];
-    // Will verify the token and return its payload
-    const payload = verifyToken(token);
-
-    User.remove({ username: payload.username }, (err, user) => {
-      if (err) {
-        res.json({
-          status: 400,
-          message: 'Could not delete user',
-          err,
-        });
+    const payload = getPayloadFromToken(req);
+    User.findByIdAndRemove(req.params.id, (err, user) => {
+      if (payload.username === user.username) {
+        if (err) {
+          res.status(400).send({
+            message: 'Could not delete user',
+            err,
+          });
+        } else {
+          // notesController.deleteAllForUser(req, res, next); // TODO: delete all notes for the user if they exist
+          res.status(200).send({
+            user,
+            message: 'User deleted successfully',
+          });
+        }
       } else {
-        notesController.deleteAllForUser(req, res, next);
-        res.json({
-          status: 200,
-          message: 'User deleted successfully',
+        res.status(401).send({
+          message: 'Unauthorized',
         });
       }
     });
   },
+
+  get: (req, res, next) => {
+    const payload = getPayloadFromToken(req);
+    User.findById(req.params.id, (err, user) => {
+      if (payload.username === user.username) {
+        if (err) {
+          // You're either unauthorized or the user doesn't exist
+          res.status(404).send({
+            message: 'Could not find user',
+            err,
+          });
+        } else {
+          res.json({
+            status: 200,
+            user,
+          });
+        }
+      } else {
+        res.status(401).send({
+          message: 'Unauthorized',
+        });
+      }
+    });
+  },
+
+  update: (req, res, next) => {
+    const payload = getPayloadFromToken(req);
+    
+    User.findOne({ username: payload.username }, (err, user) => {
+      if (err) {
+        res.status(404).send({
+          message: 'Could not find user',
+          err,
+        });
+      } else {
+        if (user.username === payload.username) {
+          const { username, name, password, email } = req.body;
+          if (username) { user.username = username; }
+          if (name) { user.name = name; }
+          if (password) { user.password = password; }
+          if (email) { user.email = email; }
+        }
+        user.save((err, updatedUser) => {
+          if (err) {
+            res.status(400).send({
+              message: 'Error updating user',
+              err
+            });
+          } else {
+            res.status(200).send({
+              user: updatedUser
+            });
+          }
+        });
+      }
+    });
+  }
 
 };
