@@ -71,7 +71,7 @@ module.exports = {
             err,
           });
         } else {
-          // notesController.deleteAllForUser(req, res, next); // TODO: delete all notes for the user if they exist
+          // notesController.deleteAllForUser(req, res, next); // TODO:delete all notes for the user if they exist
           res.status(200).send({
             user,
             message: 'User deleted successfully',
@@ -111,8 +111,7 @@ module.exports = {
 
   update: (req, res, next) => {
     const payload = getPayloadFromToken(req);
-    
-    User.findOne({ username: payload.username }, (err, user) => {
+    User.findById(req.params.id , (err, user) => {
       if (err) {
         res.status(404).send({
           message: 'Could not find user',
@@ -125,19 +124,26 @@ module.exports = {
           if (name) { user.name = name; }
           if (password) { user.password = password; }
           if (email) { user.email = email; }
+
+          user.save((err, updatedUser) => {
+            if (err) {
+              res.status(400).send({
+                message: 'Error updating user',
+                err
+              });
+            } else {
+              // Give them a new token
+              generateToken(req);
+              res.status(200).send({
+                user: updatedUser
+              });
+            }
+          });
+        } else {
+          res.status(401).send({
+            message: 'Unauthorized'
+          });
         }
-        user.save((err, updatedUser) => {
-          if (err) {
-            res.status(400).send({
-              message: 'Error updating user',
-              err
-            });
-          } else {
-            res.status(200).send({
-              user: updatedUser
-            });
-          }
-        });
       }
     });
   }
