@@ -4,9 +4,9 @@ const validateToken = require('../utils/validateToken');
 
 module.exports = (router) => {
   router.route('/users/:id')
-    .get([validateToken, controller.get])
+    .get([validateToken, controller.getOne])
     .put([validateToken, controller.update])
-    .delete([validateToken, controller.delete]);
+    .delete([validateToken, controller.deleteOne]);
 
   router.route('/login')
     .post(controller.login, validateToken);

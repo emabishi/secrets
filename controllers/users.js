@@ -61,7 +61,7 @@ module.exports = {
     });
   },
 
-  delete: (req, res, next) => {
+  deleteOne: (req, res, next) => {
     const payload = getPayloadFromToken(req);
     User.findByIdAndRemove(req.params.id, (err, user) => {
       if (payload.username === user.username) {
@@ -85,7 +85,7 @@ module.exports = {
     });
   },
 
-  get: (req, res, next) => {
+  getOne: (req, res, next) => {
     const payload = getPayloadFromToken(req);
     User.findById(req.params.id, (err, user) => {
       if (payload.username === user.username) {
