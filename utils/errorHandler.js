@@ -19,7 +19,7 @@ function errorHandler(res, statusCode, err) {
     });
     break;
   default: 
-    res.status(statusCode).send({
+    res.status(400).send({
       message: 'Server error',
       err
     });

@@ -8,6 +8,7 @@ module.exports = {
   create: (req, res, next) => {
     const { title, text } = req.body;
     const payload = getPayloadFromToken(req);
+    console.log('payload', payload.username);
     User.findOne({ username: payload.username }, (err, user) => {
       if (err) {
         res.status(404).send({
@@ -15,6 +16,7 @@ module.exports = {
           err
         });
       } else {
+        console.log('User', user);
         const note = new Note({ title, text, author: user._id });
         note.save((err, updatedNote) => {
           if (err) {
@@ -52,6 +54,7 @@ module.exports = {
   getAllForUser: (req, res, next) => {
     const payload = getPayloadFromToken(req);
     User.findOne({ username: payload.username }, (err, user) => {
+      console.log('User >>>', user);
       if (err) {
         errorHandler(res, 404, err);
       } else {
@@ -91,12 +94,22 @@ module.exports = {
   },
   
   deleteAllForUser: (req, res, next) => {
-    Note.remove(err => {
+    const payload = getPayloadFromToken(req);
+    const username = payload.username;
+    User.findOne({ username }, (err, user) => {
       if (err) {
-        errorHandler(res, 400, err);
+        errorHandler(res, 404, err);
       } else {
-        res.status(200).send({
-          message: 'Notes deleted',
+        Note.remove({ author: user._id }, (err, notes) => {
+          if (err) {
+            errorHandler(res, 400, err);
+          } else {
+            res.status(200).send({
+              message: 'Notes deleted',
+              // success: notes.isDeleted(),
+              notes,
+            });
+          }
         });
       }
     });
@@ -109,7 +122,8 @@ module.exports = {
       } else {
         res.status(200).send({
           message: 'Note deleted',
-          note
+          // success: note.isDeleted()
+          note,
         });
       }
     });

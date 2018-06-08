@@ -7,6 +7,7 @@ const NoteSchema = new Schema({
     type: 'String',
     required: true,
     trim: true,
+    unique: true,
   },
   text: {
     type: 'String',
