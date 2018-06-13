@@ -36,3 +36,5 @@ mongoose.connect(`${config.development.db}`, (err) => {
     console.log(`Connection with mongoose established at ${config.development.db}`);
   }
 });
+
+module.exports = app;

@@ -28,10 +28,12 @@ module.exports = {
           message: `Error ${err.code} ${err} Please enter unique email and password`,
         });
       } else {
-        generateToken(req);
-        res.status(201).send({
-          message: 'User created',
-        });
+        generateToken(req).then(token => 
+          res.status(201).send({
+            message: 'User created',
+            user,
+            token
+          }), err => res.status(201).send({ err }));
       }
     });
   },
@@ -48,10 +50,17 @@ module.exports = {
         const hashedPassword = user.password;
         if (validatePassword(password, hashedPassword).then(res => res)) {
           // Give them a token
-          generateToken(req);
-          res.status(202).send({
-            message: 'Login successful',
-          });
+          // generateToken(req);
+          // const token = req.headers.authorization.split(' ')[1];
+
+          generateToken(req).then(token =>
+            res.status(202).send({
+              message: 'Successful login',
+              user,
+              token
+            }), err => res.status(201).send({
+              err
+            }));
         } else {
           res.status(401).send({
             message: 'Unauthorized'
