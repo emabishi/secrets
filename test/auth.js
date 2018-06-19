@@ -15,7 +15,7 @@ describe('auth test', () => {
   });
   
   // User can register
-  describe(' ENDPOINT TESTS >>>> /register ', () => {
+  describe(' AUTH ENDPOINT TESTS >>>> /register, /login ', () => {
     it('Should be able to register a user', (done) => {
       request
       .post('/register')
