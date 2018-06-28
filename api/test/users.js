@@ -32,7 +32,24 @@ describe('ENDPOINT TESTS >>>> /users/:id', () => {
     });
   });
 
-  it('Should be able to get a user', (done) => {
+  it('should be able to register a user', done => {
+    request
+      .post('/register')
+      .send({
+        name: 'Karl Marx',
+        email: 'karl.marx@equal.com',
+        username: 'marx',
+        password: 'secret',
+      })
+      .end((err, res) => {
+        expect(res.statusCode).to.be.equal(201);
+        expect(res.body.token).not.to.be.undefined;
+        expect(res.body.user.name).to.equal('Karl Marx');
+        done();
+      });
+  });
+
+  it('Should be able to get a user', done => {
     User.findOne({ username: 'hera' }, (err, user) => {
       if (err) {
         done(err);
@@ -52,7 +69,7 @@ describe('ENDPOINT TESTS >>>> /users/:id', () => {
     
   });
 
-  it('Should be able to update a user', (done) => {
+  it('Should be able to update a user', done => {
     User.findOne({ username: 'hera'}, (err, user) => {
       if (err) {
         done(err);
@@ -72,21 +89,36 @@ describe('ENDPOINT TESTS >>>> /users/:id', () => {
     });
   });
 
-  // it('Should be able to delete a user', (done) => {
-  //   User.findOne({ username: 'hera' }, (err, user) => {
-  //     if (err) {
-  //       done(err);
-  //     } else {
-  //       request
-  //         .delete(`/users/${user._id}`)
-  //         .set('Accept', 'application/json')
-  //         .set('Authorization', `Bearer: ${token}`)
-  //         .end((err, res) => {
-  //           if (err) done(err);
-  //           expect(res.statusCode).to.be.equal(200);
-  //           done();
-  //         });
-  //     }
-  //   });
-  // });
+  it('Should be able to delete a user', done => {
+    User.findOne({ username: 'hera' }, (err, user) => {
+      if (err) {
+        done(err);
+      } else {
+        request
+          .delete(`/users/${user._id}`)
+          .set('Accept', 'application/json')
+          .set('Authorization', `Bearer: ${token}`)
+          .end((err, res) => {
+            if (err) done(err);
+            expect(res.statusCode).to.be.equal(200);
+            done();
+          });
+      }
+    });
+  });
+
+  it('should be able to log in a user', done => {
+    request
+      .post('/login')
+      .send({
+        username: 'charl',
+        password: 'charlottebronte'
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.statusCode).to.be.equal(202);
+        expect(res.body.user.username).to.be.equal('charl');
+        done();
+      });
+  });
 });

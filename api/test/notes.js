@@ -10,21 +10,11 @@ app.set('env', config.testing.port);
 describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
   let token;
   before(done => {
-    // login a user
-    request
-      .post('/register')
-      .send({
-        name: 'Hera',
-        username: 'hera',
-        email: 'hera@olympus.com',
-        password: 'secret'
-      });
-
     request
       .post('/login')
       .send({
-        username: 'hera',
-        password: 'secret'
+        username: 'charl',
+        password: 'charlottebronte'
       })
       .end((err, res) => {
         token = res.body.token;
@@ -32,56 +22,55 @@ describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
       });      
   });
 
-  // it('Should be able to create a note', (done) => {
-  //   request
-  //   .post('/notes')
-  //   .set('Accept', 'application/json')
-  //   .set('Authorization', `Bearer: ${token}`)
-  //   .send({ title: 'Queens', text: 'Queens' })
-  //   .end((err, res) => {
-  //     if (err) {
-  //       done(err);
-  //     } else {
-  //       expect(res.statusCode).to.be.equal(201);
-  //       expect(res.body.note.title).to.be.equal('Queens');
-  //       done();
-  //     }
-  //   });
-  // });
+  it('Should be able to create a note', (done) => {
+    request
+    .post('/notes')
+    .set('Accept', 'application/json')
+    .set('Authorization', `Bearer: ${token}`)
+    .send({ title: 'Queens', text: 'Queens' })
+    .end((err, res) => {
+      if (err) {
+        done(err);
+      } else {
+        expect(res.statusCode).to.be.equal(201);
+        expect(res.body.note.title).to.be.equal('Queens');
+        done();
+      }
+    });
+  });
 
   it('Should be able to update a note', (done) => {
     request
-      .put('/notes/5b22314089b48f566a62f78e')
+      .put('/notes/57c975eb2c3d08864b51cd0a')
       .set('Accept', 'application/json')
       .set('Authorization', `Bearer: ${token}`)
       .send({
-        title: 'Queening'
+        text: 'Chimamanda Adichie'
       })
       .end((err, res) => {
         if (err) done(err);
         expect(res.statusCode).to.be.equal(200);
-        // expect(res.body.user.name).to.be.equal('HeraHera');
         done();
       });
   });
 
-  // it('Should be able to delete a user', (done) => {
-  //   User.findOne({
-  //     username: 'hera'
-  //   }, (err, user) => {
-  //     if (err) {
-  //       done(err);
-  //     } else {
-  //       request
-  //         .delete(`/notes/${user._id}`)
-  //         .set('Accept', 'application/json')
-  //         .set('Authorization', `Bearer: ${token}`)
-  //         .end((err, res) => {
-  //           if (err) done(err);
-  //           expect(res.statusCode).to.be.equal(200);
-  //           done();
-  //         });
-  //     }
-  //   });
-  // });
+  it('Should be able to delete a user', (done) => {
+    User.findOne({
+      username: 'charl'
+    }, (err, user) => {
+      if (err) {
+        done(err);
+      } else {
+        request
+          .delete(`/notes/${user._id}`)
+          .set('Accept', 'application/json')
+          .set('Authorization', `Bearer: ${token}`)
+          .end((err, res) => {
+            if (err) done(err);
+            expect(res.statusCode).to.be.equal(200);
+            done();
+          });
+      }
+    });
+  });
 });

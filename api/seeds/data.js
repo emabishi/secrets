@@ -4,19 +4,19 @@ module.exports = {
   users: [
     {
       _id: mongoose.Types.ObjectId('57c96a56cd9ca231483f082b'),
-      firstname: 'Charlotte Bronte',
+      name: 'Charlotte Bronte',
       username: 'charl',
       email: 'charlote@bronte.com',
       password: 'charlottebronte',
     }, {
       _id: mongoose.Types.ObjectId('57c94278517ca48c9e5af00f'),
-      firstname: 'Victor Hugo',
+      name: 'Victor Hugo',
       username: 'vichugo',
       email: 'victor@hugo.com',
       password: 'victorhugo',
     }, {
       _id: mongoose.Types.ObjectId('57c942a8517ca48c9e5af010'),
-      firstname: 'Aldous Huxley',
+      name: 'Aldous Huxley',
       username: 'al',
       email: 'aldous@huxley.com',
       password: 'aldoushuxley',

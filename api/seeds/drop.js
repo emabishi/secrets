@@ -7,18 +7,19 @@ const Note = require('../models/notes');
 
 /* eslint-disable no-console */
 
-// TODO: Create db for testing
+function gracefulExit() {
+  mongoose.connection.close(function () {
+    console.log('Mongoose default connection with DB :' + config.testing.db + ' is disconnected through app termination');
+    process.exit(0);
+  });
+}
 
-const connection = mongoose.connect(config.testing.db);
-
-connection.on('error', (err) => {
-  console.error(`Error connecting to db ${config.testing.db} \n ${err}`);
-});
 
 function dropUsers() {
   User.deleteMany({}, (err) => {
     if (err) {
       console.error(`Error dropping users in test environment. ${err} \n \n`);
+      process.exit(1);
     } else {
       console.log(`Successfully dropped users in test environment. \n \n`);
     }
@@ -28,9 +29,11 @@ function dropUsers() {
 function dropNotes() {
   Note.deleteMany({}, (err) => {
     if (err) {
-      console.error(`Error dropping users in test environment. ${err} \n \n`);
+      console.error(`Error dropping notes in test environment. ${err} \n \n`);
+      process.exit(1);
     } else {
-      console.log(`Successfully dropped users in test environment. \n \n`);
+      console.log(`Successfully dropped notes in test environment. \n \n`);
+      process.exit(0);
     }
   });
 }
@@ -40,6 +43,14 @@ function drop() {
   dropNotes();
 }
 
-connection.once('open', drop());
-connection.close();
-console.log('Connection closed after dropping collections ....');
+mongoose.connect(`${config.testing.db}`, {}, (err) => {
+  if (err) {
+    console.error(`Error connecting to db ${config.testing.db} \n ${err}`);
+  } else {
+    drop();
+
+  }
+});
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
