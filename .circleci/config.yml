@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test-api:
+    working-directory: './api'
+    machine: true
+    branches:
+      only:
+        - develop
+    steps:
+      - run: 
+          name: Test
+          command: npm test
+      - run:
+          name: Generate code coverage
+          command: 'npm run script coveralls'
+
+workflows:
+  version: 2
+    jobs:
+      - test-api
