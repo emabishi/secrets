@@ -4,7 +4,6 @@ const generateToken = require('../utils/generateToken');
 const verifyToken = require('../utils/verifyToken');
 
 const User = require('../models/users');
-const notesController = require('./notes');
 
 function getPayloadFromToken(req) {
   const token = req.headers.authorization.split(' ')[1];
@@ -42,9 +41,12 @@ module.exports = {
     const { username, password } = req.body;
     User.findOne({ username }, (err, user) => {
       if (err) {
-        res.status(404).send({
-          message: 'User not found',
+        res.status(400).send({
           err,
+        });
+      } else if(!user) {
+        res.status(404).send({
+          message: 'User not found'
         });
       } else {
         const hashedPassword = user.password;

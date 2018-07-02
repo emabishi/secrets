@@ -9,25 +9,18 @@ app.set('env', config.testing.port);
 
 describe('ENDPOINT TESTS >>>> /users/:id', () => {
   let token;
+  let user;
   before(done => {
-    // login a user
-    request
-    .post('/register')
-    .send({
-      name: 'Hera',
-      username: 'hera',
-      email: 'hera@olympus.com',
-      password: 'secret'
-    });
 
     request
     .post('/login')
     .send({
-      username: 'hera',
-      password: 'secret'
+      username: 'vichugo',
+      password: 'victorhugo'
     })
     .end((err, res) => {
       token = res.body.token;
+      user = res.body.user;
       done();
     });
   });
@@ -50,74 +43,55 @@ describe('ENDPOINT TESTS >>>> /users/:id', () => {
   });
 
   it('Should be able to get a user', done => {
-    User.findOne({ username: 'hera' }, (err, user) => {
-      if (err) {
-        done(err);
-      } else {
-        request
-          .get(`/users/${user._id}`)
-          .set('Authorization', `Bearer: ${token}`)
-          .end((err, res) => {
-            if (err) done(err);
-            expect(res.statusCode).to.be.equal(200);
-            expect(res.body.user._id.length).to.be.equal(24);
-            expect(res.body.user.username).to.be.equal('hera');
-            done();
-          });
-      }
-    });
-    
+    request
+      .get(`/users/${user._id}`)
+      .set('Authorization', `Bearer: ${token}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.user._id.length).to.be.equal(24);
+        expect(res.body.user.username).to.be.equal('vichugo');
+        done();
+      });
   });
 
   it('Should be able to update a user', done => {
-    User.findOne({ username: 'hera'}, (err, user) => {
-      if (err) {
-        done(err);
-      } else {
-        request
-          .put(`/users/${user._id}`)
-          .set('Accept', 'application/json')
-          .set('Authorization', `Bearer: ${token}`)
-          .send({ name: 'HeraHera' })
-          .end((err, res) => {
-            if (err) done(err);
-            expect(res.statusCode).to.be.equal(200);
-            expect(res.body.user.name).to.be.equal('HeraHera');
-            done();
-          });
-      }
-    });
+    request
+      .put(`/users/${user._id}`)
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer: ${token}`)
+      .send({ name: 'Karl' })
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.statusCode).to.be.equal(200);
+        expect(res.body.user.name).to.be.equal('Karl');
+        done();
+      });
   });
 
   it('Should be able to delete a user', done => {
-    User.findOne({ username: 'hera' }, (err, user) => {
-      if (err) {
-        done(err);
-      } else {
-        request
-          .delete(`/users/${user._id}`)
-          .set('Accept', 'application/json')
-          .set('Authorization', `Bearer: ${token}`)
-          .end((err, res) => {
-            if (err) done(err);
-            expect(res.statusCode).to.be.equal(200);
-            done();
-          });
-      }
-    });
+    request
+      .delete(`/users/${user._id}`)
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer: ${token}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.statusCode).to.be.equal(200);
+        done();
+      });
   });
 
   it('should be able to log in a user', done => {
     request
       .post('/login')
       .send({
-        username: 'charl',
-        password: 'charlottebronte'
+        username: 'marx',
+        password: 'secret'
       })
       .end((err, res) => {
         if (err) done(err);
         expect(res.statusCode).to.be.equal(202);
-        expect(res.body.user.username).to.be.equal('charl');
+        expect(res.body.user.username).to.be.equal('marx');
         done();
       });
   });

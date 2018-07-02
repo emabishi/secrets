@@ -7,12 +7,9 @@ const logger = require('morgan');
 const app = express();
 const router = express.Router();
 
-const config = require('./config');
+const config = require('./config')[process.env.NODE_ENV];
 const routes = require('./routes');
 
-// https://expressjs.com/en/4x/api.html#app.settings.table
-app.set('env', config.development.env);
-app.set('port', config.development.port);
 
 // Inject all incoming request payload parameters as the req.body property of the request
 app.use(express.urlencoded({ extended: true }));
@@ -21,19 +18,19 @@ app.use(logger('dev'));
 
 app.use('/', routes(router));
 
-app.listen(app.get('port'), (err) => {
+app.listen(config.port, (err) => {
   if (err) {
-    console.error(`Error connecting to ${config.development.port} \n err`);
+    console.error(`Error connecting to ${config.port} \n err`);
   } else {
-    console.log(`Server now listening at localhost:${app.get('port')}`);
+    console.log(`Server now listening at localhost:${config.port}`);
   }
 });
 
-mongoose.connect(`${config.development.db}`, (err) => {
+mongoose.connect(config.db, (err) => {
   if (err) {
     console.error('Error connecting to mongoose');
   } else {
-    console.log(`Connection with mongoose established at ${config.development.db}`);
+    console.log(`Connection with mongoose established at ${config.db}`);
   }
 });
 

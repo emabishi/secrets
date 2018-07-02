@@ -9,6 +9,7 @@ app.set('env', config.testing.port);
 
 describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
   let token;
+  let user;
   before(done => {
     request
       .post('/login')
@@ -18,6 +19,7 @@ describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
       })
       .end((err, res) => {
         token = res.body.token;
+        user = res.body.user;
         done();
       });      
   });
@@ -54,23 +56,15 @@ describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
       });
   });
 
-  it('Should be able to delete a user', (done) => {
-    User.findOne({
-      username: 'charl'
-    }, (err, user) => {
-      if (err) {
-        done(err);
-      } else {
-        request
-          .delete(`/notes/${user._id}`)
-          .set('Accept', 'application/json')
-          .set('Authorization', `Bearer: ${token}`)
-          .end((err, res) => {
-            if (err) done(err);
-            expect(res.statusCode).to.be.equal(200);
-            done();
-          });
-      }
-    });
+  it('Should be able to delete a users own notes', (done) => {
+    request
+      .delete(`/notes/${user._id}`)
+      .set('Accept', 'application/json')
+      .set('Authorization', `Bearer: ${token}`)
+      .end((err, res) => {
+        if (err) done(err);
+        expect(res.statusCode).to.be.equal(200);
+        done();
+      });
   });
 });
