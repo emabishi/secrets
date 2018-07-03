@@ -6,10 +6,8 @@
 .register-form-container {
   width: 100%;
   min-height: 100vh;
-  
   display: flex;
   justify-content: center
-
 }
 
 .wrap-login {
@@ -17,7 +15,6 @@
     flex-direction: column;
     align-items: center; /* Cross axis alignment */
     justify-content: center; /* Main axis alignment */
-
     box-sizing: border-box;
     /* border: 5px solid grey; */
     padding: 77px 55px 33px 55px;
@@ -25,4 +22,8 @@
 
 .register-btn {
   padding-top: 20px;
+}
+
+.sign-up-redirect {
+  padding-top: 30px;
 }

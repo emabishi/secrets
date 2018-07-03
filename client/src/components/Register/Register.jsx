@@ -24,11 +24,10 @@ class Register extends Component {
   }
 
   render() {
-    console.log('state', this.state)
     return (
       <div className="register-form-container">
         <div className="wrap-login">
-          <TextField 
+          <TextField
             name="fullname"
             autoFocus
             label="Full Name"
@@ -58,6 +57,7 @@ class Register extends Component {
             onChange={this.handleInputChange}
           />
           <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Register</Button></div>
+          <span className="sign-up-redirect">Don’t have an account?<a href="#">Sign Up</a></span>
         </div>
       </div>
     );
