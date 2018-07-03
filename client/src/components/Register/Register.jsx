@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { connect } from 'react-redux';
@@ -57,7 +58,7 @@ class Register extends Component {
             onChange={this.handleInputChange}
           />
           <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Register</Button></div>
-          <span className="sign-up-redirect">Don’t have an account?<a href="#">Sign Up</a></span>
+          <span className="sign-up-redirect">Already have an account?<Link to="/login">Log In</Link></span>
         </div>
       </div>
     );

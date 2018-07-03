@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
 import { TextField, Button } from '@material-ui/core';
 
@@ -38,7 +39,7 @@ class Login extends Component {
             onChange={this.handleInputChange}
           />
           <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Login</Button></div>
-          <span className="sign-up-redirect">Already have an account?<a href="">Log In</a></span>
+          <span className="sign-up-redirect">Don't have an account?<Link to="/register">Register</Link></span>
         </div>
       </div>
     );
