@@ -29,8 +29,8 @@ jobs:
           - v1-dependencies-
 
       - run: 
-      name: Install
-      command: cd api && npm install
+          name: Install
+          command: cd api && npm install
 
       - save_cache:
           paths:
