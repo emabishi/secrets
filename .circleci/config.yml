@@ -7,6 +7,13 @@ jobs:
       only:
         - develop
     steps:
+      - checkout
+      - run:
+          name: Checkout develop
+          command: git checkout develop
+      - run:
+          name: Install
+          command: cd api && npm install
       - run: 
           name: Test
           command: npm test
