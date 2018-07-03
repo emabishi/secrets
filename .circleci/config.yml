@@ -19,9 +19,4 @@ jobs:
           command: npm test
       - run:
           name: Generate code coverage
-          command: 'npm run script coveralls'
-
-workflows:
-  version: 2
-    jobs:
-      - test-api
+          command: npm run script coveralls
