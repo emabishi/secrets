@@ -1,16 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-import AddNote from './AddNote';
+import { Drawer } from '@material-ui/core';
+import NotesList from './NotesList';
 
-class Sidebar extends Component {
-  render() {
-    return (
-      <div>
-        <AddNote />
-      </div>
-    );
+import data from '../../data';
+
+const styles = {
+  drawer: {
+    drawerPaper: { position: 'relative', width: 240 }
   }
+}
+
+const Sidebar = ({handleNoteClick}) => {
+  return (
+    <div>
+      <Drawer
+        variant="permanent"
+        anchor="left"
+        classes={{
+          paper: styles.drawerPaper,
+        }}
+      >
+        <NotesList notes={data.notes} handleNoteClick={handleNoteClick}/>
+      </Drawer>
+    </div>
+  );
 }
 
 Sidebar.propTypes = {

@@ -6,6 +6,8 @@ import Register from '../components/Register/Register';
 import Login from '../components/Login/Login';
 import Journal from '../components/Journal/Journal';
 
+import './Root.css';
+
 
 class Root extends Component {
   render() {
@@ -13,6 +15,7 @@ class Root extends Component {
       <Provider store={this.props.store}>
         <Router>
           <Switch>
+            <Route exact path="/" component={Register} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
             <Route path="/journal" component={Journal} />

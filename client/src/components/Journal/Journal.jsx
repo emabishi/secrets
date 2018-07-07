@@ -5,10 +5,14 @@ import Sidebar from './Sidebar';
 import Note from './Note'
 
 class Journal extends Component {
+  handleNoteClick = (event) => {
+    console.log('note clicked', event.target.id);
+  }
+
   render() {
     return (
       <div>
-        <Sidebar />
+        <Sidebar handleNoteClick={this.handleNoteClick}  />
         <Note />
       </div>
     );

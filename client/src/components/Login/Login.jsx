@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 
 import { TextField, Button } from '@material-ui/core';
 
-// TODO: Once login link is clicked, route to /login page
-
 class Login extends Component {
   state = {
     username: '', password: ''
