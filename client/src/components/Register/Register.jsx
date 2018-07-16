@@ -13,14 +13,16 @@ import * as actions from '../../actions/creators';
 class Register extends Component {
   state = {
     user: {
-      fullname: '', username: '', email: '', password: ''
+      name: '', username: '', email: '', password: ''
     },
     showPassword: false,
   }
 
   handleInputChange = (event) => {
     const {name, value} = event.target;
-    this.setState({ user: { [name]: value } });
+    const user = this.state.user;
+    user[name] = value;
+    this.setState({ user })
   }
 
   handleRegisterClick = () => {
@@ -43,7 +45,7 @@ class Register extends Component {
       <div className="register-form-container">
         <div className="wrap-login">
           <TextField
-            name="fullname"
+            name="name"
             autoFocus
             label="Full Name"
             required

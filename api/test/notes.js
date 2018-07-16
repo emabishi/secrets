@@ -3,9 +3,9 @@ const request = require('supertest')(app);
 const expect = require('chai').expect;
 
 const User = require('../models/notes');
-const config = require('../config');
+const config = require('../config')[process.env.NODE_ENV];
 
-app.set('env', config.testing.port);
+// app.set('env', config.testing.port);
 
 describe('ENDPOINT TESTS >>>> /notes, /notes/:id', () => {
   let token;

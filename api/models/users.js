@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const Schema = mongoose.Schema;
 
-const config = require('../config');
+const config = require('../config')[process.env.NODE_ENV];
 
 const UserSchema = new Schema({
   name: {
@@ -39,7 +39,7 @@ UserSchema.pre('save', function (next) {
   const user = this;
   // If the user document has been modified or is new
   if (user.isModified || user.isNew) {
-    bcrypt.hash(user.password, config.development.saltingRounds, function(err, hash) {
+    bcrypt.hash(user.password, config.saltingRounds, function(err, hash) {
       if (err) {
 				console.error('Error hashing password for user'); // eslint-disable-line
         next(err);

@@ -1,10 +1,15 @@
 import * as types from './types';
 import axios from 'axios';
 
-export const register = (user) => {
+export function register(user) {
   return (dispatch, getState) => {
-    axios.post('/register')
-    .then(response => dispatch(registerSuccess(response)))
+    axios.post('/register', user)
+    .then(response => {
+      const user = response.data
+      localStorage.setItem('token', response.data.token)
+      dispatch(registerSuccess(user));
+  }
+    )
     .catch(err => dispatch(registerFailure(err)))
   }
 }

@@ -23,8 +23,8 @@ module.exports = {
 
     user.save(err => {
       if (err) {
-        res.status(409).send({
-          message: `Error ${err.code} ${err} Please enter unique email and password`,
+        res.status(400).send({
+          message: `Error ${err.code} ${err}`,
         });
       } else {
         generateToken(req).then(token => 
