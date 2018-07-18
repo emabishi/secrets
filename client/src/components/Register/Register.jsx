@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { Link } from 'react-router-dom';
+
 import { TextField, Button, FormControl, InputAdornment, IconButton } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import './Register.css';
@@ -27,7 +29,7 @@ class Register extends Component {
 
   handleRegisterClick = () => {
     const user = this.state.user;
-    this.props.actions.register(user);
+    this.props.actions.register(user, this.props.history);
   }
 
   handleClickShowPassword = () => {
@@ -89,7 +91,7 @@ class Register extends Component {
           />
           </FormControl>
           <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Register</Button></div>
-          <span className="sign-up-redirect">Don’t have an account?<a href="#">Sign Up</a></span>
+          <span className="sign-up-redirect">Already have an account?<Link to="/login">Log In</Link></span>
         </div>
       </div>
     );
@@ -115,5 +117,5 @@ Register.propTypes = {
   // name: PropTypes.string,
 };
 
-export default connect((mapStateToProps), mapDispatchToProps)(Register);
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
 

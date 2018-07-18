@@ -1,13 +1,14 @@
 import * as types from './types';
 import axios from 'axios';
 
-export function register(user) {
+export function register(user, history) {
   return (dispatch, getState) => {
     axios.post('/register', user)
     .then(response => {
       const user = response.data
       localStorage.setItem('token', response.data.token)
       dispatch(registerSuccess(user));
+      history.push('/journal');
   }
     )
     .catch(err => dispatch(registerFailure(err)))
@@ -28,10 +29,16 @@ export const registerFailure = (error) => {
   }
 }
 
-export const login = (user) => {
-  return {
-    type: types.LOGIN,
-    data: user
+export function login(user, history) {
+  console.log('USER>>>>>', user)
+  return (dispatch, getState) => {
+    axios.post('/login', user)
+    .then(response => {
+      console.log('response', response);
+      localStorage.setItem('token', response.data.token);
+      dispatch(loginSuccess(response.data))
+      history.push('/journal');
+    }).catch(error => dispatch(loginFailure(error)))
   }
 }
 

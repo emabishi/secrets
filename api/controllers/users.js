@@ -39,7 +39,7 @@ module.exports = {
 
   login: (req, res, next) => {
     const { username, password } = req.body;
-    User.findOne({ username }, (err, user) => {
+    User.findOne({ username }, async (err, user) => {
       if (err) {
         res.status(400).send({
           err,
@@ -50,11 +50,12 @@ module.exports = {
         });
       } else {
         const hashedPassword = user.password;
-        if (validatePassword(password, hashedPassword).then(res => res)) {
+        const isMatch = await validatePassword(password, hashedPassword);
+
+        if (isMatch) {
           // Give them a token
           // generateToken(req);
           // const token = req.headers.authorization.split(' ')[1];
-
           generateToken(req).then(token =>
             res.status(202).send({
               message: 'Successful login',

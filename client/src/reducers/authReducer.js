@@ -8,9 +8,9 @@ export default (state=initialState, action) => {
     case types.REGISTER_FAILURE:
       return Object.assign({}, state.authError, action.data);
     case types.LOGIN_SUCCESS:
-      return true
+      return Object.assign({}, state.user, action.data);
     case types.LOGIN_FAILURE:
-      return true;
+      return Object.assign({}, state.authError, action.data);
     default:
       return state;
   }
