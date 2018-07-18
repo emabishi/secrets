@@ -3,6 +3,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const logger = require('morgan');
+const cors = require('cors');
 
 const app = express();
 const router = express.Router();
@@ -10,7 +11,7 @@ const router = express.Router();
 const config = require('./config')[process.env.NODE_ENV];
 const routes = require('./routes');
 
-
+app.use(cors());
 // Inject all incoming request payload parameters as the req.body property of the request
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

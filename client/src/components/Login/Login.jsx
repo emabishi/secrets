@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { TextField, Button } from '@material-ui/core';
 
-// TODO: Once login link is clicked, route to /login page
+import * as actions from '../../actions/creators';
+
+import { bindActionCreators } from 'redux';
 
 class Login extends Component {
   state = {
@@ -15,8 +19,7 @@ class Login extends Component {
   }
 
   handleLoginClick = (event) => {
-    // todo: Dispatch login action that sets whatever th user has entered this in state
-    console.log('clicked');
+    this.props.actions.login(this.state, this.props.history)
   }
 
   render() {
@@ -37,16 +40,24 @@ class Login extends Component {
             value={this.state.password}
             onChange={this.handleInputChange}
           />
-          <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Login</Button></div>
-          <span className="sign-up-redirect">Already have an account?<a href="">Log In</a></span>
+          <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleLoginClick}>Login</Button></div>
+          <span className="sign-up-redirect">Don't have an account?<Link to="/register">Sign Up</Link></span>
         </div>
       </div>
     );
   }
 }
+const mapStateToProps = (state, ownProps) => {
+  return {
 
-Login.propTypes = {
-  // name: PropTypes.string,
-};
+  }
+}
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+  return {
+    actions: bindActionCreators(actions, dispatch)
+  }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

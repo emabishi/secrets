@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('../config');
+const config = require('../config')[process.env.NODE_ENV];
 
 function generateToken(req) {
   return new Promise((resolve, reject) => {
@@ -8,7 +8,7 @@ function generateToken(req) {
       issuer: 'secretsapplication',
       username: req.body.username
     };
-    jwt.sign(payload, config.development.secret, (err, token) => {
+    jwt.sign(payload, config.secret, (err, token) => {
       // Add token to request object
       if (err) {
         const error = `Error generating token , ${err} `;

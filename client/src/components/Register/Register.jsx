@@ -4,23 +4,42 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { TextField, Button } from '@material-ui/core';
+import { Link } from 'react-router-dom';
+
+import { TextField, Button, FormControl, InputAdornment, IconButton } from '@material-ui/core';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 import './Register.css';
 
+import * as actions from '../../actions/creators';
 
 class Register extends Component {
   state = {
-    fullname: '', username: '', email: '', password: ''
+    user: {
+      name: '', username: '', email: '', password: ''
+    },
+    showPassword: false,
   }
 
   handleInputChange = (event) => {
     const {name, value} = event.target;
-    this.setState({ [name] : value });
+    const user = this.state.user;
+    user[name] = value;
+    this.setState({ user })
   }
 
-  handleRegisterClick = (event) => {
-    // todo: Dispatch register action that sets whatever th user has entered this in state
-    console.log('clicked');
+  handleRegisterClick = () => {
+    const user = this.state.user;
+    this.props.actions.register(user, this.props.history);
+  }
+
+  handleClickShowPassword = () => {
+    this.setState({
+      showPassword: !this.state.showPassword
+    });
+  }
+
+  handleMouseDownPassword = (event) => {
+    event.preventDefault();
   }
 
   render() {
@@ -28,7 +47,7 @@ class Register extends Component {
       <div className="register-form-container">
         <div className="wrap-login">
           <TextField
-            name="fullname"
+            name="name"
             autoFocus
             label="Full Name"
             required
@@ -49,18 +68,48 @@ class Register extends Component {
             value={this.state.email}
             onChange={this.handleInputChange}
           />
+          <FormControl>
           <TextField
-            name="password"
-            label="Password"
             required
+            label="Password"
+            type={this.state.showPassword ? 'text' : 'password'}
+            name="password"
             value={this.state.password}
             onChange={this.handleInputChange}
+            endadornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="Toggle password visibility"
+                  onClick={this.handleClickShowPassword}
+                  onMouseDown={this.handleMouseDownPassword}
+                >
+                  {this.state.showPassword ? <VisibilityOff /> : <Visibility />}
+                  {"here"}
+                </IconButton>
+              </InputAdornment>
+            }
           />
+          </FormControl>
           <div className="register-btn"><Button variant="contained" name="login" onClick={this.handleRegisterClick}>Register</Button></div>
-          <span className="sign-up-redirect">Don’t have an account?<a href="#">Sign Up</a></span>
+          <span className="sign-up-redirect">Already have an account?<Link to="/login">Log In</Link></span>
         </div>
       </div>
     );
+  }
+}
+
+// Declare what part of the redux store you'd like to expose to the component as props
+const mapStateToProps = (state, ownProps) => {
+  // props: state
+  return {
+  }
+}
+
+// Declare actions we want to expose as props to the component
+const mapDispatchToProps = (dispatch) => {
+  // props: actions
+  return {
+    actions: bindActionCreators(actions, dispatch)
   }
 }
 
@@ -68,5 +117,5 @@ Register.propTypes = {
   // name: PropTypes.string,
 };
 
-export default Register;
+export default connect(mapStateToProps, mapDispatchToProps)(Register);
 

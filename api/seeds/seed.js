@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const config = require('../config');
+const config = require('../config')[process.env.NODE_ENV];
 const data = require('./data');
 
 const User = require('../models/users');
@@ -12,7 +12,7 @@ const Note = require('../models/notes');
 
 function gracefulExit() {
   mongoose.connection.close(() => {
-    console.log(`Mongoose default connection with DB : ${config.testing.db} is disconnected through app termination`);
+    console.log(`Mongoose default connection with DB : ${config.db} is disconnected through app termination`);
     process.exit(0);
   });
 }
@@ -45,7 +45,7 @@ function seedNotes() {
 }
 
 function seed() {
-  console.log(`Successfully connected to db ${config.testing.db}
+  console.log(`Successfully connected to db ${config.db}
               Attempting to seed database now .... \n`);
   seedNotes();
   seedUsers();
@@ -54,7 +54,7 @@ function seed() {
 
 mongoose.connect(config.testing.db, {}, (err) => {
   if (err) {
-    console.error(`Error connecting to db ${config.testing.db} \n ${err}`);
+    console.error(`Error connecting to db ${config.db} \n ${err}`);
   } else {
     seed();
   }

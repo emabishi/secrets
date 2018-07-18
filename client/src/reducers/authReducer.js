@@ -1,18 +1,17 @@
-import {LOGIN_FAILURE, LOGIN_SUCCESS, REGISTER_FAILURE, REGISTER_SUCCESS} from '../actions/types';
+import * as types from '../actions/types';
+import initialState from '../store/initialState';
 
-const authReducer = (state={}, action) => {
+export default (state=initialState, action) => {
   switch(action.type) {
-    case LOGIN_SUCCESS:
-      return true
-    case REGISTER_SUCCESS:
-      return true;
-    case LOGIN_FAILURE:
-      return true
-    case REGISTER_FAILURE:
-      return true;
+    case types.REGISTER_SUCCESS:
+      return Object.assign({}, state.user, action.data);
+    case types.REGISTER_FAILURE:
+      return Object.assign({}, state.authError, action.data);
+    case types.LOGIN_SUCCESS:
+      return Object.assign({}, state.user, action.data);
+    case types.LOGIN_FAILURE:
+      return Object.assign({}, state.authError, action.data);
     default:
       return state;
   }
 }
-
-export default authReducer;
