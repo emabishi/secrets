@@ -1,4 +1,6 @@
 export default {
   user: {},
-  authError: {}
+  authError: {},
+  notes: [],
+  notesError: {}
 }

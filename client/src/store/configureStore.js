@@ -6,7 +6,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import reduxImmutableStateInvariant from 'redux-immutable-state-invariant';
 
 import rootReducer from '../reducers/rootReducer';
-import initialState from '../reducers/initialState';
+import initialState from '../store/initialState';
 
 
 const configureStore = () => {

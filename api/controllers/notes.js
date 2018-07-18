@@ -80,7 +80,6 @@ module.exports = {
         const { title, text } = req.body;
         if (title) { note.title = title; }
         if (title) { note.text = text; }
-        console.log('UPDATED NOTE', note)
         note.save((err, updatedNote) => {
           if (err) {
             errorHandler(res, 400, err);

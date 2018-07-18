@@ -30,7 +30,6 @@ export const registerFailure = (error) => {
 }
 
 export function login(user, history) {
-  console.log('USER>>>>>', user)
   return (dispatch, getState) => {
     axios.post('/login', user)
     .then(response => {
@@ -42,15 +41,39 @@ export function login(user, history) {
   }
 }
 
-export const loginSuccess = () => {
+export const loginSuccess = (user) => {
   return {
-    type: types.LOGIN_SUCCESS
+    type: types.LOGIN_SUCCESS,
+    data: user
   }
 }
 
 export const loginFailure = (error) => {
   return {
-    type: types.LOGIN_SUCCESS,
+    type: types.LOGIN_FAILURE,
+    data: error
+  }
+}
+
+export function addNote (note) {
+  return (dispatch, getState) => {
+    axios.post('/notes', note)
+    .then(response => {
+      dispatch(addNoteSuccess(response.data))
+    }).catch(error => dispatch(addNoteFailure(error)))
+  }
+}
+
+const addNoteSuccess = (note) => {
+  return {
+    type: types.ADD_NOTE_SUCCESS,
+    data: note
+  }
+}
+
+const addNoteFailure = (error) => {
+  return {
+    type: types.ADD_NOTE_FAILURE,
     data: error
   }
 }
